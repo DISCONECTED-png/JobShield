@@ -8,7 +8,7 @@ const PublicDashboard = () => {
 
   const fetchJobs = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/jobs/public");
+      const res = await fetch("https://jobshield-backend.onrender.com/api/jobs/public");
       const data = await res.json();
       setJobs(data);
     } catch (err) {
@@ -21,7 +21,7 @@ const PublicDashboard = () => {
   const vote = async (id, voteValue) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/jobs/${id}/vote`, {
+      const res = await fetch(`https://jobshield-backend.onrender.com/api/jobs/${id}/vote`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

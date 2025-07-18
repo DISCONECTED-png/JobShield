@@ -10,7 +10,7 @@ const LoginRegister = () => {
     password: ''
   });
 
-  const BASE_URL = 'http://localhost:5000';
+  const BASE_URL = 'https://jobshield-backend.onrender.com';
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });

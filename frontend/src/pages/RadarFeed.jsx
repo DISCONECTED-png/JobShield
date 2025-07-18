@@ -7,7 +7,7 @@ const RadarFeed = () => {
   useEffect(() => {
     const fetchJobs = async () => {
         try {
-          const res = await fetch('http://localhost:5000/api/radar?limit=20');
+          const res = await fetch('https://jobshield-backend.onrender.com/api/radar?limit=20');
           const data = await res.json();
           console.log('Fetched jobs:', data); // 👈 log data
           setJobs(data);
