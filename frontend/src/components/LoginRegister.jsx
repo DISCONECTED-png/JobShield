@@ -4,6 +4,7 @@ import { signInWithPopup } from 'firebase/auth';
 
 const LoginRegister = () => {
   const [isRegister, setIsRegister] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,6 +18,8 @@ const LoginRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // start loader
+
     const url = isRegister
       ? `${BASE_URL}/api/auth/register`
       : `${BASE_URL}/api/auth/login`;
@@ -42,10 +45,13 @@ const LoginRegister = () => {
     } catch (err) {
       console.error(err.message);
       alert('Something went wrong.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoogle = async () => {
+    setLoading(true);
     try {
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
@@ -66,9 +72,10 @@ const LoginRegister = () => {
     } catch (err) {
       console.error(err.message);
       alert('Google login error');
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
     <div className="auth-container">
       <form onSubmit={handleSubmit} className="auth-form">
@@ -102,13 +109,10 @@ const LoginRegister = () => {
           onChange={handleChange}
           required
         />
-
-        <button type="submit" className="auth-btn">
-          {isRegister ? 'Register' : 'Login'}
+        <button type="submit" className="auth-btn" disabled={loading}>
+          {loading ? 'Loading...' : isRegister ? 'Register' : 'Login'}
         </button>
-
         <div className="or-divider">or</div>
-
         <div className="google-btn" onClick={handleGoogle}>
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/800px-Google_%22G%22_logo.svg.png"

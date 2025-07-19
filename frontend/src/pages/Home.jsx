@@ -102,7 +102,7 @@ const Home = () => {
       </section>
 
       {/* Solution */}
-      <section className="solution" data-aos="fade-left" id="features">
+      <section className="solution" data-aos="fade-up" id="features">
         <div className="solution-content">
           <img src={aiImage} alt="Solution" />
           <div className="solution-text">
