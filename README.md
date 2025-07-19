@@ -54,20 +54,20 @@ Backend Setup
 - npm install
 
 Create a .env
-PORT=5000
-MONGO_URI=your_mongo_connection
-JWT_SECRET=your_jwt_secret
-OPENAI_API_KEY=your_openai_key
-COHERE_API_KEY=your_cohere_key
-FB_PROJECT_ID=fb_project_id
-FB_PRIVATE_KEY=fb_private_key
-FB_CLIENT_EMAIL=fb_client_email
-FB_CLIENT_ID=fb_client_id
-FB_AUTH_URI=fb_auth_uri
-FB_TOKEN_URI=fb_token_uri
-FB_AUTH_PROVIDER_CERT_URL=auth_provider_cert_url
-FB_CLIENT_CERT_URL=client_cert_url
-FB_UNIVERSE_DOMAIN=universe_domain
+-PORT=5000
+-MONGO_URI=your_mongo_connection
+-JWT_SECRET=your_jwt_secret
+-OPENAI_API_KEY=your_openai_key
+-COHERE_API_KEY=your_cohere_key
+-FB_PROJECT_ID=fb_project_id
+-FB_PRIVATE_KEY=fb_private_key
+-FB_CLIENT_EMAIL=fb_client_email
+-FB_CLIENT_ID=fb_client_id
+-FB_AUTH_URI=fb_auth_uri
+-FB_TOKEN_URI=fb_token_uri
+-FB_AUTH_PROVIDER_CERT_URL=auth_provider_cert_url
+-FB_CLIENT_CERT_URL=client_cert_url
+-FB_UNIVERSE_DOMAIN=universe_domain
 Run the dev server:npm run dev
 
 Frontend Setup
@@ -75,7 +75,7 @@ Frontend Setup
 - npm install
 
 Create a .env
-VITE_API_BASE_URL=http://localhost:5000
+-VITE_API_BASE_URL=http://localhost:5000
 Run the dev server:npm run dev
 
 Test Credentials:
