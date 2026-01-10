@@ -26,7 +26,7 @@ Respond in JSON like:
 
   try {
     const response = await cohere.chat({
-      model: 'command-r',
+      model: 'command-a-03-2025',
       message: prompt,
       temperature: 0.3,
       max_tokens: 150,
