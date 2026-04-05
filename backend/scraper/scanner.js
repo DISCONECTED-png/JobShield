@@ -9,7 +9,12 @@ const cohere = new CohereClient({ token: process.env.COHERE_API_KEY });
 
 async function getCohereScore(description) {
   const prompt = `
-You're a scam detection bot. Analyze the job description below and return:
+You are a strict JSON-only API. You are a scam detection bot. 
+Analyze the job description below and return a JSON object with a "score" (0-100) and an array of "tags" (strings).
+
+CRITICAL INSTRUCTION: Respond ONLY with valid JSON. Do not include any introductory text, conversational filler, or markdown formatting (no backticks).
+
+Format:
 {
   "score": 65,
   "tags": ["Missing company details", "Too-good-to-be-true salary"]
@@ -21,22 +26,33 @@ ${description}
 """
 `;
 
+  let rawText = "";
+  
   try {
     const response = await cohere.chat({
-      model: 'command-r',
+      model: 'command-a-03-2025',
       message: prompt,
-      temperature: 0.3,
+      temperature: 0.1,
       max_tokens: 150,
     });
 
-    let text = response.text.trim();
-    if (text.startsWith('```')) {
-      text = text.replace(/```json|```/g, '').trim();
+    rawText = response.text.trim();
+    
+
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    
+    if (!jsonMatch) {
+      throw new Error("No valid JSON object found in the response.");
     }
 
-    return JSON.parse(text);
+    const cleanJsonText = jsonMatch[0]; 
+
+    return JSON.parse(cleanJsonText);
   } catch (err) {
     console.error('❌ Cohere parse error:', err.message);
+    if (rawText) {
+      console.error('Raw text received from Cohere was:', rawText);
+    }
     return null;
   }
 }
@@ -47,14 +63,12 @@ export default async function scrapeRemoteOK() {
 
   try {
     await page.goto('https://remoteok.com/remote-dev-jobs', {
-      waitUntil: 'networkidle2', // wait for full load
+      waitUntil: 'networkidle2',
       timeout: 30000,
     });
 
-    // Scroll a bit to trigger lazy-loaded content
     await page.evaluate(() => window.scrollBy(0, 1000));
     await new Promise(resolve => setTimeout(resolve, 2000));
-
 
     const jobs = await page.$$eval('table#jobsboard > tbody > tr.job', rows => {
       return rows.map(row => {
@@ -73,6 +87,7 @@ export default async function scrapeRemoteOK() {
         company: job.company,
         description: job.description,
       });
+      
       if (exists) {
         console.log(`⚠️ Already exists: ${job.title} @ ${job.company}`);
         continue;
