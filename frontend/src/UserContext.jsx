@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
+import { API_BASE_URL } from './config';
 
 export const UserContext = createContext();
 
@@ -10,7 +11,7 @@ export const UserProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const res = await fetch('https://jobshield-backend.onrender.com/api/auth/me', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`,
