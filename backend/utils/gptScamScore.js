@@ -25,14 +25,14 @@ Respond in JSON like:
 `;
 
   try {
-    const response = await cohere.chat({
-      model: 'command-a-03-2025',
-      message: prompt,
+    const response = await cohere.v2.chat({
+      model: 'command-a-plus-05-2026',
+      messages: [{ role: 'user', content: prompt }],
       temperature: 0.3,
-      max_tokens: 150,
     });
 
-    let text = response.text.trim();
+    const textItem = response.message?.content?.find((item) => item.type === 'text');
+    let text = textItem?.text?.trim() || '';
 
     // Remove Markdown code block if present
     if (text.startsWith('```')) {
