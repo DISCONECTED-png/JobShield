@@ -27,25 +27,25 @@ ${description}
 `;
 
   let rawText = "";
-  
+
   try {
-    const response = await cohere.chat({
-      model: 'command-a-03-2025',
-      message: prompt,
+    const response = await cohere.v2.chat({
+      model: 'command-a-plus-05-2026',
+      messages: [{ role: 'user', content: prompt }],
       temperature: 0.1,
-      max_tokens: 150,
     });
 
-    rawText = response.text.trim();
-    
+    const textItem = response.message?.content?.find((item) => item.type === 'text');
+    rawText = textItem?.text?.trim() || '';
+
 
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-    
+
     if (!jsonMatch) {
       throw new Error("No valid JSON object found in the response.");
     }
 
-    const cleanJsonText = jsonMatch[0]; 
+    const cleanJsonText = jsonMatch[0];
 
     return JSON.parse(cleanJsonText);
   } catch (err) {
@@ -63,10 +63,11 @@ export default async function scrapeRemoteOK() {
 
   try {
     await page.goto('https://remoteok.com/remote-dev-jobs', {
-      waitUntil: 'networkidle2',
+      waitUntil: 'networkidle2', // wait for full load
       timeout: 30000,
     });
 
+    // Scroll a bit to trigger lazy-loaded content
     await page.evaluate(() => window.scrollBy(0, 1000));
     await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -87,7 +88,7 @@ export default async function scrapeRemoteOK() {
         company: job.company,
         description: job.description,
       });
-      
+
       if (exists) {
         console.log(`⚠️ Already exists: ${job.title} @ ${job.company}`);
         continue;
